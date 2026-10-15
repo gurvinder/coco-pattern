@@ -15,6 +15,12 @@
 #
 # CSVs below are the channel heads observed in the v4.22 catalog on 2026-10-15.
 
+global:
+  # The NFD operand image (ose-node-feature-discovery-rhel9) is tagged per OCP version.
+  # The :v5.0 tag is not published yet (pre-GA), so pin the operand to the v4.22 image.
+  # Consumed by charts/all/baremetal/templates/nfd-instance.yaml.
+  nfdOperandVersion: "4.22"
+
 clusterGroup:
   subscriptions:
     lvm-operator:
