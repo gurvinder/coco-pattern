@@ -120,7 +120,8 @@ clusterGroup:
   - '/overrides/values-storage-{{ $.Values.global.storageProvider }}.yaml'
   - '/overrides/values-{{ $.Values.global.clusterVersion }}.yaml'
   - '/overrides/values-hw-{{ $.Values.global.hardware.profile }}.yaml'
-  - '/overrides/values-baremetal-airgap.yaml'
+  # Connected deploy (cnfdd10 / OCP 5.0.0-rc.6): airgap catalog override disabled.
+  # Re-enable for disconnected: '/overrides/values-baremetal-airgap.yaml'
 
   extraObjects:
     wait-for-vault-unsealed:

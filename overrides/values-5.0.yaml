@@ -1,0 +1,30 @@
+# OCP 5.0 version-specific operator pins
+# Applied via sharedValueFiles when global.clusterVersion is "5.0"
+#
+# STAND-IN CATALOG (cnfdd10 / 5.0.0-rc.6):
+# The v5.0 redhat/community operator indexes do not yet carry sandboxed-containers,
+# trustee, lvms, nfd, or patterns-operator. As a stand-in we point these
+# subscriptions at the v4.22 index images, added as extra CatalogSources:
+#   registry.redhat.io/redhat/redhat-operator-index:v4.22    -> cs-redhat-operator-index-v4-22
+#   registry.redhat.io/redhat/community-operator-index:v4.22 -> cs-community-operator-index-v4-22
+# (patterns-operator source is set in values-global.yaml: main.patternsOperator.source)
+#
+# To revert once the operators ship in the v5.0 index: drop the `source:` keys below
+# (and main.patternsOperator.source), reset lvm-operator channel if renamed, and
+# delete the two stand-in CatalogSources.
+#
+# CSVs below are the channel heads observed in the v4.22 catalog on 2026-10-15.
+
+clusterGroup:
+  subscriptions:
+    lvm-operator:
+      channel: stable-4.22
+      source: cs-redhat-operator-index-v4-22
+    sandbox:
+      source: cs-redhat-operator-index-v4-22
+      csv: sandboxed-containers-operator.v1.13.1
+    trustee:
+      source: cs-redhat-operator-index-v4-22
+      csv: trustee-operator.v1.2.1
+    nfd:
+      source: cs-redhat-operator-index-v4-22

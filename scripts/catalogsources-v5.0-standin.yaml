@@ -1,0 +1,41 @@
+# Stand-in CatalogSources for deploying coco-pattern on OCP 5.0.x (pre-GA).
+#
+# The v5.0 redhat/community operator indexes do not yet carry sandboxed-containers,
+# trustee, lvms, nfd, or patterns-operator. Until they ship, source them from the
+# v4.22 index images. Apply BEFORE `./pattern.sh make install`:
+#
+#   oc apply -f scripts/catalogsources-v5.0-standin.yaml
+#
+# Values wiring that points subscriptions here:
+#   overrides/values-5.0.yaml           -> lvm-operator / sandbox / trustee / nfd source
+#   values-global.yaml main.patternsOperator.source -> patterns-operator source
+#
+# Remove these (and the `source:` keys above) once the operators are published to
+# the v5.0 index.
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: cs-redhat-operator-index-v4-22
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: registry.redhat.io/redhat/redhat-operator-index:v4.22
+  displayName: Red Hat Operators v4.22 (5.0 stand-in)
+  publisher: Red Hat
+  updateStrategy:
+    registryPoll:
+      interval: 30m
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: cs-community-operator-index-v4-22
+  namespace: openshift-marketplace
+spec:
+  sourceType: grpc
+  image: registry.redhat.io/redhat/community-operator-index:v4.22
+  displayName: Community Operators v4.22 (5.0 stand-in)
+  publisher: Red Hat
+  updateStrategy:
+    registryPoll:
+      interval: 30m
