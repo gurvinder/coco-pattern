@@ -1,0 +1,11 @@
+module coco-snp-gmem 1.0;
+
+require {
+    type container_kvm_t;
+    type kvm_gmem_t;
+    class anon_inode { create map read write };
+}
+
+# Allow kata-cc QEMU (container_kvm_t) to use SEV-SNP/TDX guest_memfd (kvm_gmem_t anon_inode).
+# RHCOS 10 selinux-policy does not yet carry this rule for the kata qemu domain.
+allow container_kvm_t kvm_gmem_t:anon_inode { create map read write };

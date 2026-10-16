@@ -1,0 +1,49 @@
+{{- /*
+SELinux allow rule for CoCo guest_memfd on RHCOS 10 (pre-GA).
+The shipped el10 selinux-policy does not permit the kata QEMU domain
+(container_kvm_t) to create the SEV-SNP/TDX guest-memory anon-inode
+(kvm_gmem_t), so every kata-cc pod fails sandbox creation with:
+  qemu-kvm: Error creating KVM guest_memfd: Permission denied
+Compiled on first boot by coco-gmem-selinux.service. checkmodule -C emits CIL;
+semodule loads CIL natively. Source: charts/all/baremetal/selinux/coco-snp-gmem.te
+Remove once RHCOS ships the rule in its base selinux-policy.
+*/}}
+{{- if not .Values.global.cluster.hcp }}
+{{- range list "master" "worker" }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: {{ . }}
+  name: 99-coco-gmem-selinux-{{ . }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+        - path: /etc/selinux/coco-snp-gmem.te
+          mode: 0644
+          contents:
+            source: data:text/plain;charset=utf-8;base64,bW9kdWxlIGNvY28tc25wLWdtZW0gMS4wOwoKcmVxdWlyZSB7CiAgICB0eXBlIGNvbnRhaW5lcl9rdm1fdDsKICAgIHR5cGUga3ZtX2dtZW1fdDsKICAgIGNsYXNzIGFub25faW5vZGUgeyBjcmVhdGUgbWFwIHJlYWQgd3JpdGUgfTsKfQoKIyBBbGxvdyBrYXRhLWNjIFFFTVUgKGNvbnRhaW5lcl9rdm1fdCkgdG8gdXNlIFNFVi1TTlAvVERYIGd1ZXN0X21lbWZkIChrdm1fZ21lbV90IGFub25faW5vZGUpLgojIFJIQ09TIDEwIHNlbGludXgtcG9saWN5IGRvZXMgbm90IHlldCBjYXJyeSB0aGlzIHJ1bGUgZm9yIHRoZSBrYXRhIHFlbXUgZG9tYWluLgphbGxvdyBjb250YWluZXJfa3ZtX3Qga3ZtX2dtZW1fdDphbm9uX2lub2RlIHsgY3JlYXRlIG1hcCByZWFkIHdyaXRlIH07Cg==
+    systemd:
+      units:
+        - name: coco-gmem-selinux.service
+          enabled: true
+          contents: |
+            [Unit]
+            Description=Compile and load coco-snp-gmem SELinux policy module
+            After=local-fs.target
+            ConditionPathExists=/etc/selinux/coco-snp-gmem.te
+            [Service]
+            Type=oneshot
+            RemainAfterExit=yes
+            ExecStart=/usr/bin/checkmodule -M -m -C -o /tmp/coco-snp-gmem.cil /etc/selinux/coco-snp-gmem.te
+            ExecStart=/usr/sbin/semodule -i /tmp/coco-snp-gmem.cil
+            [Install]
+            WantedBy=multi-user.target
+{{- end }}
+{{- end }}
