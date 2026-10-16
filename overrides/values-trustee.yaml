@@ -2,6 +2,10 @@
 # Common to all profiles: admin format, HTTPS config, secret resources.
 # Profile-specific overrides (tdx, collateralService, gpu, baremetal) stay inline in values-<profile>.yaml.
 kbs:
+  # Cap KBS (actix) HTTP workers. Default is one worker per CPU; on this 512-thread
+  # SNP host that exhausts the container's file-descriptor limit and the kbs pod
+  # crashes (EMFILE). 4 workers is plenty for attestation traffic.
+  workerCount: 4
   admin:
     format: "v1.1"
   https:
