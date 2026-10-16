@@ -5,5 +5,5 @@ kbs:
   snp:
     enabled: true
     vcekSecrets:
-    - hwid: "0553f266826754d5e36a9b73def599ff22b89fe5b1e07e7ee7b42b569b14c3d91361557a9e23d46a0154c1d73faaeaebd445d374cde7c6068e4eec41afb81c56"
+    - hwid: "0553f266826754d5e36a9b73def599ff22b89fe5b1e07e7ee7b42b569b14c3d9"
       secretName: "snp-vcek-0553f2668267"
