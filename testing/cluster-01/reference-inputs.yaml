@@ -1,0 +1,19 @@
+# Test host inputs independently checked against release artifacts and collateral.
+tee: snp
+ocpVersion: 4.22.15
+vcpus: 8
+memoryMiB: 65536
+kernelCommandLine: tsc=reliable no_timer_check rcupdate.rcu_expedited=1 i8042.direct=1
+  i8042.dumbkbd=1 i8042.nopnp=1 i8042.noaux=1 noreplace-smp reboot=k cryptomgr.notests
+  net.ifnames=0 pci=lastbus=0 console=hvc0 console=hvc1 debug panic=1 nr_cpus=8 selinux=0
+  scsi_mod.scan=none agent.log=debug agent.launch_process_timeout=15 cgroup_no_v1=all
+  pci=realloc pci=nocrs pci=assign-busses nvrc.smi.srs=1
+platformReferences:
+  snp_bootloader:
+  - 3
+  snp_tee_svn:
+  - 2
+  snp_snp_svn:
+  - 6
+  snp_microcode:
+  - 117

@@ -22,3 +22,5 @@ node_modules
 .ansible/
 __pycache__/
 LAB.md
+.private/
+output/

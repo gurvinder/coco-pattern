@@ -280,3 +280,13 @@ update-kyverno-chart: ## Pull and embed upstream Kyverno Helm chart (requires in
 	@find charts/vendor/kyverno -name "README.md" -o -name "README.md.gotmpl" | xargs rm -f
 	@echo "Embedded charts/vendor/kyverno (v$(KYVERNO_VERSION))"
 	@echo "Next: commit, push, and sync ArgoCD"
+
+##@ Confidential Qwen with OpenShift AI
+HELM ?= helm
+OPA ?= opa
+.PHONY: rhoai-preflight rhoai-platform rhoai-build rhoai-publish rhoai-verify test-rhoai
+rhoai-preflight rhoai-platform rhoai-build rhoai-publish rhoai-verify:
+	HELM="$(HELM)" scripts/rhoai-demo.sh $(@:rhoai-%=%)
+test-rhoai:
+	HELM="$(HELM)" OPA="$(OPA)" tests/rhoai/check.sh
+	python3 -m unittest discover -s tests -p 'test_rhoai*.py' -v

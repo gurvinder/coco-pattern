@@ -1,0 +1,181 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: model-publisher
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (.Files.Glob "files/*").AsConfig | indent 2 }}
+{{- if eq .Values.distribution.backend "http" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: encrypted-model
+  namespace: {{ .Release.Namespace | quote }}
+  annotations:
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: {{ .Values.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.size | quote }}
+{{- end }}
+---
+{{- if .Values.publish }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ if eq .Values.distribution.backend "s3" }}publish-qwen-{{ .Values.distribution.s3.uri | sha256sum | trunc 12 }}{{ else }}publish-qwen{{ end }}
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        coco.io/skip-initdata: 'true'
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      containers:
+      - name: publish
+        image: {{ .Values.image | quote }}
+        command:
+        - /bin/bash
+        - /scripts/publish.sh
+        env:
+        - name: MODEL_BACKEND
+          value: {{ .Values.distribution.backend | quote }}
+        {{- if eq .Values.distribution.backend "s3" }}
+        - name: MODEL_URI
+          value: {{ .Values.distribution.s3.uri | quote }}
+        - name: AWS_ENDPOINT_URL
+          value: {{ .Values.distribution.s3.endpoint | quote }}
+        - name: AWS_DEFAULT_REGION
+          value: {{ .Values.distribution.s3.region | quote }}
+        - {name: AWS_SHARED_CREDENTIALS_FILE, value: /var/run/model-s3/credentials}
+        - {name: AWS_EC2_METADATA_DISABLED, value: "true"}
+        {{- if .Values.distribution.s3.caBundle }}
+        - {name: AWS_CA_BUNDLE, value: /opt/s3-ca/ca.crt}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            cpu: '1'
+            memory: 1Gi
+          limits:
+            cpu: '4'
+            memory: 2Gi
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: scripts
+          mountPath: /scripts
+          readOnly: true
+        - name: key
+          mountPath: /keys
+          readOnly: true
+        {{- if eq .Values.distribution.backend "s3" }}
+        - {name: model-s3, mountPath: /var/run/model-s3, readOnly: true}
+        {{- if .Values.distribution.s3.caBundle }}
+        - {name: s3-ca, mountPath: /opt/s3-ca, readOnly: true}
+        {{- end }}
+        {{- end }}
+      volumes:
+      - name: data
+        {{- if eq .Values.distribution.backend "s3" }}
+        ephemeral:
+          volumeClaimTemplate:
+            spec:
+              accessModes: [ReadWriteOnce]
+              storageClassName: {{ .Values.storageClass | quote }}
+              resources:
+                requests:
+                  storage: {{ .Values.size | quote }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: encrypted-model
+        {{- end }}
+      - name: scripts
+        configMap:
+          name: model-publisher
+      - name: key
+        secret:
+          secretName: {{ .Values.keySecret | quote }}
+      {{- if eq .Values.distribution.backend "s3" }}
+      - name: model-s3
+        secret:
+          secretName: {{ .Values.distribution.s3.publisherCredentialsSecret | quote }}
+      {{- if .Values.distribution.s3.caBundle }}
+      - name: s3-ca
+        configMap: {name: model-publisher-s3-ca}
+      {{- end }}
+      {{- end }}
+{{- end }}
+{{- if eq .Values.distribution.backend "http" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: encrypted-model
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: encrypted-model
+  template:
+    metadata:
+      labels:
+        app: encrypted-model
+        coco.io/skip-initdata: 'true'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: http
+        image: {{ .Values.image | quote }}
+        command:
+        - python3
+        - -m
+        - http.server
+        - '8080'
+        - --directory
+        - /data/public
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: '1'
+            memory: 256Mi
+        volumeMounts:
+        - name: data
+          mountPath: /data
+          readOnly: true
+        readinessProbe:
+          exec:
+            command:
+            - python3
+            - -c
+            - import pathlib; assert pathlib.Path("/data/public/qwen.tar").stat().st_size
+              > 0
+          periodSeconds: 15
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: encrypted-model
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: encrypted-model
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  selector:
+    app: encrypted-model
+  ports:
+  - port: 8080
+    targetPort: 8080
+{{- end }}

@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhoai-object-storage-ca
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    service.beta.openshift.io/inject-cabundle: "true"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rhoai-object-storage-policy
+  namespace: {{ .Release.Namespace }}
+data:
+  bucket_policy.py: |
+{{ .Files.Get "files/bucket_policy.py" | indent 4 }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rhoai-object-storage-policy
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 10
+  activeDeadlineSeconds: 1200
+  template:
+    metadata:
+      labels:
+        coco.io/skip-initdata: "true"
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      containers:
+        - name: policy
+          image: {{ .Values.objectStorage.image | quote }}
+          command: [python3, /scripts/bucket_policy.py]
+          env:
+            - name: BUCKET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.objectStorage.bucket }}
+                  key: BUCKET_NAME
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.bucket }}
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.bucket }}
+                  key: AWS_SECRET_ACCESS_KEY
+            - {name: AWS_ENDPOINT_URL, value: "https://s3.{{ .Release.Namespace }}.svc"}
+            - {name: AWS_CA_BUNDLE, value: /ca/service-ca.crt}
+            - {name: AWS_DEFAULT_REGION, value: us-east-1}
+            - {name: AWS_EC2_METADATA_DISABLED, value: "true"}
+            - {name: MODEL_PREFIX, value: {{ .Values.objectStorage.prefix | quote }}}
+            - name: PUBLISHER_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  name: noobaa-account-{{ .Values.objectStorage.publisherAccount }}
+                  key: ARN
+            - name: READER_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  name: noobaa-account-{{ .Values.objectStorage.readerAccount }}
+                  key: ARN
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {cpu: "1", memory: 256Mi}
+          volumeMounts:
+            - {name: scripts, mountPath: /scripts, readOnly: true}
+            - {name: ca, mountPath: /ca, readOnly: true}
+      volumes:
+        - name: scripts
+          configMap: {name: rhoai-object-storage-policy}
+        - name: ca
+          configMap: {name: rhoai-object-storage-ca}

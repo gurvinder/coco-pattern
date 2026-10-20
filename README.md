@@ -1,5 +1,11 @@
 # coco-pattern
 
+This fork adds a confidential Qwen demo using Red Hat OpenShift AI. See the
+[installation runbook](docs/rhoai/install.md), [architecture and model-to-chat execution trace](docs/rhoai/end-to-end.md), and
+[stock upstream base and additions](docs/rhoai/stock-base.md). The extension
+offers `intel-tdx-gpu` and `amd-snp-gpu`; the optional test installation and its
+hardware qualification limits are recorded under [testing/cluster-01](testing/cluster-01/README.md).
+
 Validated pattern for deploying confidential containers on OpenShift using the [Validated Patterns](https://validatedpatterns.io/) framework.
 
 Confidential containers use hardware-backed Trusted Execution Environments (TEEs) to isolate workloads from cluster and hypervisor administrators. This pattern deploys and configures the Red Hat CoCo stack — including the sandboxed containers operator, Trustee (Key Broker Service) operator, and Kata infrastructure — on Azure cloud instances and bare metal.
@@ -137,7 +143,7 @@ The importer discovers the QGS DaemonSet from the `pck-certs-watcher` pod owner 
 ### Bare metal deployment
 
 1. Set `main.clusterGroupName: baremetal` in `values-global.yaml`
-2. Set `global.hardware.profile` to match your hardware (default: `intel-tdx`)
+2. Set `global.hardware.profile` to match your hardware (this demo branch defaults to `intel-tdx-gpu`)
    - Run `make detect-hardware` after NFD is deployed to detect your hardware profile automatically
    - Options: `intel-tdx`, `amd-snp`, `intel-tdx-gpu`, `amd-snp-gpu`
 3. Run `bash scripts/gen-secrets.sh` to generate KBS keys and PCCS secrets

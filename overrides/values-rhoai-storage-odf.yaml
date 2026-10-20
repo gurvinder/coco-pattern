@@ -1,0 +1,27 @@
+# Install ODF's standalone object gateway. Existing block storage supplies its PVCs.
+clusterGroup:
+  subscriptions:
+    odf:
+      name: odf-operator
+      namespace: openshift-storage
+      source: redhat-operators
+      channel: stable-4.22
+      csv: odf-operator.v4.22.6-rhodf
+      installPlanApproval: Manual
+      annotations:
+        argocd.argoproj.io/sync-wave: "25"
+  applications:
+    rhoai-object-storage:
+      name: rhoai-object-storage
+      namespace: openshift-storage
+      project: hub
+      path: charts/hub/rhoai-object-storage
+      annotations:
+        argocd.argoproj.io/sync-wave: "31"
+      syncPolicy:
+        automated:
+          selfHeal: true
+        retry:
+          limit: 20
+      extraValueFiles:
+        - /{{ $.Values.global.rhoai.site }}/values-object-storage.yaml

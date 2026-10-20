@@ -1,0 +1,7 @@
+kbs:
+  resourcePolicy:
+    confidentialGuestBindings:
+      rhoai-qwen-secrets:
+        initData: 04559aa6ac22c9aa067a73ea85c0d73b21da705eccf440d3fee1e609ff1091b9
+        launchMeasurement: 81b9d5db6c10b0b9297b448d917044261f9bd0d6cceceafd1b4680058b365c5ac77a4d82ca77c4ac10c838e32536eddb
+        tee: snp

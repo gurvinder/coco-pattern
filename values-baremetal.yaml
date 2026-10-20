@@ -120,11 +120,16 @@ clusterGroup:
   # Explicitly mention the cluster-state based overrides we plan to use for this pattern.
   # We can use self-referential variables because the chart calls the tpl function with these variables defined
   sharedValueFiles:
+  - '/{{ $.Values.global.rhoai.site }}/install.yaml'
   - '/overrides/values-{{ $.Values.global.clusterPlatform }}.yaml'
   - '/overrides/values-storage-{{ $.Values.global.storageProvider }}.yaml'
   - '/overrides/values-{{ $.Values.global.clusterVersion }}.yaml'
   - '/overrides/values-hw-{{ $.Values.global.hardware.profile }}.yaml'
   - '/overrides/values-baremetal-{{ if $.Values.global.airgap }}airgap{{ else }}connected{{ end }}.yaml'
+  - '/overrides/values-rhoai.yaml'
+  - '/overrides/values-rhoai-{{ $.Values.global.hardware.profile }}.yaml'
+  - '/overrides/values-rhoai-storage-{{ $.Values.global.rhoai.storageProvider }}.yaml'
+  - '/{{ $.Values.global.rhoai.site }}/values-site.yaml'
 
   extraObjects:
     wait-for-vault-unsealed:

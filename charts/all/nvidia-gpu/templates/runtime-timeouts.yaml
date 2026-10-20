@@ -1,0 +1,48 @@
+{{- if .Values.runtimeTimeouts.enabled }}
+{{- $profile := .Values.global.hardware.profile }}
+{{- if not (has $profile (list "intel-tdx-gpu" "amd-snp-gpu")) }}
+{{- fail "GPU runtime timeouts require intel-tdx-gpu or amd-snp-gpu" }}
+{{- end }}
+{{- $tee := ternary "tdx" "snp" (eq $profile "intel-tdx-gpu") }}
+{{- $seconds := int .Values.runtimeTimeouts.seconds }}
+{{- if lt $seconds 120 }}
+{{- fail "runtimeTimeouts.seconds must be at least 120" }}
+{{- end }}
+{{/* CRI-O replaces runtime tables from later files; preserve the complete
+     OSC 1.13.1 GPU handler instead of supplying a timeout-only table. */}}
+{{- $config := printf "[crio.runtime.runtimes.kata-%s-nvidia-gpu]\nruntime_path = \"/usr/bin/containerd-shim-kata-v2\"\nruntime_type = \"vm\"\nruntime_root = \"/run/vc\"\nruntime_config_path = \"/etc/kata-containers/kata-%s-nvidia-gpu/configuration.toml\"\nprivileged_without_host_devices = true\nruntime_pull_image = true\nallowed_annotations = [\"io.kubernetes.cri-o.Devices\"]\ncontainer_create_timeout = %d\n" $tee $tee $seconds }}
+{{- range .Values.runtimeTimeouts.pools }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: coco-gpu-timeout-{{ .name }}
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/{{ .name }}: ""
+  kubeletConfig:
+    runtimeRequestTimeout: {{ printf "%ds" $seconds | quote }}
+    {{- with $.Values.runtimeTimeouts.maxPods }}
+    maxPods: {{ . }}
+    {{- end }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  name: 99-coco-gpu-timeout-{{ .name }}
+  labels:
+    machineconfiguration.openshift.io/role: {{ .role | quote }}
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+        - path: /etc/crio/crio.conf.d/99-coco-gpu-timeout
+          mode: 0644
+          overwrite: true
+          contents:
+            source: {{ printf "data:text/plain;charset=utf-8;base64,%s" ($config | b64enc) | quote }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,6 @@
+# This Blackwell test host needs Triton; generic H100 defaults are unchanged.
+inference:
+  attentionBackend: TRITON_ATTN
+# Separate from the earlier HTTP acceptance volume; proves a fresh S3 download.
+storage:
+  claimName: qwen-model-s3-exclusive

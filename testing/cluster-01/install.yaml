@@ -1,0 +1,8 @@
+global:
+  hardware:
+    profile: amd-snp-gpu
+  rhoai:
+    site: testing/cluster-01
+    storageProvider: odf
+  extraValueFiles:
+  - testing/cluster-01/install.yaml

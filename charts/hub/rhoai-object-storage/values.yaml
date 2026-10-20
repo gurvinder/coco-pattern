@@ -1,0 +1,14 @@
+objectStorage:
+  storageClass: lvms-vg1
+  backingSize: 100Gi
+  # Large model uploads exceed the operator's 400 MiB minimal PV-pool default.
+  backingResources:
+    requests: {cpu: 500m, memory: 1Gi}
+    limits: {cpu: "2", memory: 2Gi}
+  bucket: rhoai-models
+  bucketClass: rhoai-models
+  publisherAccount: rhoai-model-publisher
+  readerAccount: rhoai-model-reader
+  prefix: qwen3-0.6b
+  # Stock Red Hat initializer supplies Python and boto3 for bucket administration.
+  image: registry.redhat.io/rhoai/odh-kserve-storage-initializer-rhel9@sha256:33def048f85820f43495cac53115f902a5b18bb98d516ac6ac1e9a6905647a6d

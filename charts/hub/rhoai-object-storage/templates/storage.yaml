@@ -1,0 +1,71 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: rhoai-object-storage
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Prune=false,Delete=false
+spec:
+  multiCloudGateway:
+    reconcileStrategy: standalone
+    dbStorageClassName: {{ .Values.objectStorage.storageClass | quote }}
+    disableLoadBalancerService: true
+    denyHTTP: true
+---
+apiVersion: noobaa.io/v1alpha1
+kind: BackingStore
+metadata:
+  name: rhoai-models
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Prune=false,Delete=false
+spec:
+  type: pv-pool
+  pvPool:
+    numVolumes: 1
+    storageClass: {{ .Values.objectStorage.storageClass | quote }}
+    resources:
+      {{- mergeOverwrite (deepCopy .Values.objectStorage.backingResources) (dict "requests" (dict "storage" .Values.objectStorage.backingSize)) | toYaml | nindent 6 }}
+---
+apiVersion: noobaa.io/v1alpha1
+kind: BucketClass
+metadata:
+  name: {{ .Values.objectStorage.bucketClass }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Prune=false,Delete=false
+spec:
+  placementPolicy:
+    tiers:
+      - backingStores: [rhoai-models]
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: {{ .Values.objectStorage.bucket }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Prune=false,Delete=false
+spec:
+  generateBucketName: {{ .Values.objectStorage.bucket }}
+  storageClassName: openshift-storage.noobaa.io
+  additionalConfig:
+    bucketclass: {{ .Values.objectStorage.bucketClass }}
+{{- range $name := list .Values.objectStorage.publisherAccount .Values.objectStorage.readerAccount }}
+---
+apiVersion: noobaa.io/v1alpha1
+kind: NooBaaAccount
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Prune=false,Delete=false
+spec:
+  allow_bucket_creation: false
+  default_resource: rhoai-models
+{{- end }}

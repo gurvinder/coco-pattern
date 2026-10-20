@@ -1,0 +1,5 @@
+apiVersion: v2
+name: rhoai-object-storage
+description: Optional Red Hat ODF standalone Multicloud Object Gateway and model bucket
+type: application
+version: 0.1.0

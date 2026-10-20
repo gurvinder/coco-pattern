@@ -1,0 +1,3 @@
+kbs:
+  resourcePolicy:
+    confidentialGuestBindings: {}

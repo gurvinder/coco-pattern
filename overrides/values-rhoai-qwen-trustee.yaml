@@ -1,0 +1,11 @@
+kbs:
+  secretResources:
+  - name: kbsres1
+    key: secret/data/hub/kbsres1
+  - name: passphrase
+    key: secret/data/hub/passphrase
+  - name: rhoai-qwen-secrets
+    key: secret/data/hub/rhoaiQwen
+    decodingStrategy: Base64
+  resourcePolicy:
+    confidentialGuestBindings: {}

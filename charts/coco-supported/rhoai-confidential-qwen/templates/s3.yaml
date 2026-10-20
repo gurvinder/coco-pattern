@@ -1,0 +1,37 @@
+{{- if not (has .Values.distribution.backend (list "http" "s3")) }}
+{{- fail "distribution.backend must be http or s3" }}
+{{- end }}
+{{- if eq .Values.distribution.backend "s3" }}
+{{- if or (not (hasPrefix "https://" .Values.distribution.s3.endpoint)) (not (hasPrefix "s3://" .Values.model.uri)) (ne .Values.model.uri .Values.distribution.s3.uri) }}
+{{- fail "S3 requires HTTPS and matching model.uri/distribution.s3.uri" }}
+{{- end }}
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: model-s3-reader
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  refreshInterval: 15s
+  secretStoreRef:
+    name: {{ .Values.secretStore.name }}
+    kind: {{ .Values.secretStore.kind }}
+  target:
+    name: {{ .Values.distribution.s3.readerCredentialsSecret }}
+  data:
+    - secretKey: credentials
+      remoteRef:
+        key: {{ .Values.distribution.s3.readerVaultPath | quote }}
+        property: credentials
+{{- if .Values.distribution.s3.caBundle }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.name }}-s3-ca
+  namespace: {{ .Release.Namespace }}
+data:
+  ca.crt: {{ .Values.distribution.s3.caBundle | toJson }}
+{{- end }}
+{{- end }}

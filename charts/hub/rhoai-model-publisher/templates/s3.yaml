@@ -1,0 +1,35 @@
+{{- if not (has .Values.distribution.backend (list "http" "s3")) }}
+{{- fail "distribution.backend must be http or s3" }}
+{{- end }}
+{{- if eq .Values.distribution.backend "s3" }}
+{{- if or (not (hasPrefix "https://" .Values.distribution.s3.endpoint)) (not (hasPrefix "s3://" .Values.distribution.s3.uri)) }}
+{{- fail "S3 requires an HTTPS endpoint and an s3:// archive URI" }}
+{{- end }}
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: model-s3-publisher
+  namespace: {{ .Release.Namespace }}
+spec:
+  refreshInterval: 15s
+  secretStoreRef:
+    name: {{ .Values.secretStore.name }}
+    kind: {{ .Values.secretStore.kind }}
+  target:
+    name: {{ .Values.distribution.s3.publisherCredentialsSecret }}
+  data:
+    - secretKey: credentials
+      remoteRef:
+        key: {{ .Values.distribution.s3.publisherVaultPath | quote }}
+        property: credentials
+{{- if .Values.distribution.s3.caBundle }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: model-publisher-s3-ca
+  namespace: {{ .Release.Namespace }}
+data:
+  ca.crt: {{ .Values.distribution.s3.caBundle | toJson }}
+{{- end }}
+{{- end }}

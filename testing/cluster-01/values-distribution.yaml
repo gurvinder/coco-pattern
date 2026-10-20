@@ -1,0 +1,51 @@
+distribution:
+  backend: s3
+  s3:
+    uri: s3://rhoai-models-517baaba-87a9-454a-91a1-b0e2421f6de2/qwen3-0.6b/1c615e92226c4744b20f39fab8a8b764/qwen.tar
+    endpoint: https://s3.openshift-storage.svc
+    region: us-east-1
+    caBundle: '-----BEGIN CERTIFICATE-----
+
+      MIIDUTCCAjmgAwIBAgIIBeuWZLs0SdYwDQYJKoZIhvcNAQELBQAwNjE0MDIGA1UE
+
+      Awwrb3BlbnNoaWZ0LXNlcnZpY2Utc2VydmluZy1zaWduZXJAMTc5MTIxMTQzMDAe
+
+      Fw0yNjEwMDUxNDQzNDlaFw0yODEyMDMxNDQzNTBaMDYxNDAyBgNVBAMMK29wZW5z
+
+      aGlmdC1zZXJ2aWNlLXNlcnZpbmctc2lnbmVyQDE3OTEyMTE0MzAwggEiMA0GCSqG
+
+      SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDDoGGwUcf0292LXhoqRbOKfIg31siAkCTs
+
+      VW3QpOCQQsGGbkYfGJ4qfzWvdAefM5ICHGwDfBYleaOd9TEd3rWlgwCIwO2C+CmN
+
+      79hIDaNp/uplBChuHAbDFxmBMbW31o2q7/wBXpzYShxnSaReE70gZqTY8iDilbbO
+
+      pAdUgm1o0DAkRhwpS7nIQrSuj9USXLZ146kfXp6rUcSIQT6m0Uhv1FjF/7xZBRux
+
+      6p9i4imFGFfE+eYRfM8NCbXgi0uTcDznUhH4kOS7FrRXR57iVStVmHEweyFX5XK7
+
+      wsFtgxsqxj2e/oAmAfstH9cLUATJDabbgjU0b8DZyCfa5yBKczGDAgMBAAGjYzBh
+
+      MA4GA1UdDwEB/wQEAwICpDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSbDUVz
+
+      kK9P0O27GINp8Nn6jGNgljAfBgNVHSMEGDAWgBSbDUVzkK9P0O27GINp8Nn6jGNg
+
+      ljANBgkqhkiG9w0BAQsFAAOCAQEAgRTmdjG3kMb8JdSmBypmiu8v/0rh5wwzgJ6L
+
+      i3PihgCgu+/eRRfQg4IM2t49LtCoMLF+ZR+QCHxldUwTBqwsGqO4zqfbpDN5jkWw
+
+      uTF18BVmKAehN7NtM/V0nE5dZYap949FfJ619gq/mFO+C3nqYtMPyOR7Onj1BGrX
+
+      zFu3eALDrqwhSrZ/P8R1KqNHajb/z3Q3SVvn79IXD4GWG7Yd28fPzkTO+jJQyqjI
+
+      i3qV7XEIxrq30JWbRXOel7rlLCD8aclmsLJqM+k23F6RxczwNlLDfV8ZghtMcgzs
+
+      JM/qFhe9uiUmVsvTJ1qA/TWkQgb2A7oUJ8SzZDOsnpZD87je8w==
+
+      -----END CERTIFICATE-----
+
+      '
+    readerCredentialsSecret: model-s3-reader
+    readerVaultPath: secret/data/hub/rhoaiS3Reader
+    publisherCredentialsSecret: model-s3-publisher
+    publisherVaultPath: secret/data/hub/rhoaiS3Publisher

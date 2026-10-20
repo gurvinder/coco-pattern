@@ -1,0 +1,25 @@
+# Public configuration for this site only.
+clusterGroup:
+  applications:
+    nvidia-gpu:
+      overrides:
+      - name: iommu.enabled
+        value: 'false'
+    rhoai-model-publisher:
+      disabled: false
+    rhoai-confidential-qwen:
+      disabled: false
+    rhoai-platform:
+      disabled: false
+runtimeTimeouts:
+  maxPods: 500
+lvmCluster:
+  deviceSelector:
+    paths:
+    - /dev/disk/by-id/nvme-eui.01000000000000058ce38ee3034e25da
+kbs:
+  snp:
+    enabled: true
+    vcekSecrets:
+    - hwid: 631fe8a14126299e
+      secretName: snp-vcek-631fe8a14126299e

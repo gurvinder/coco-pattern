@@ -1,0 +1,7 @@
+global:
+  hardware:
+    profile: intel-tdx-gpu
+  rhoai:
+    site: sites/example
+  extraValueFiles:
+  - sites/example/install.yaml

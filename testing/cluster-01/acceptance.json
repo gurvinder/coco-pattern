@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 3,
+  "date": "2026-10-20",
+  "result": "CLEAN_BASELINE_COCO_RHOAI_ODF_INSTALL_TO_BROWSER_CHAT_PASS",
+  "scope": "Fresh pattern/operator/runtime/data installation on existing OpenShift; not an OpenShift rebuild or the earlier HTTP-to-S3 migration.",
+  "hardware": {
+    "ocp": "4.22.15",
+    "tee": "AMD SEV-SNP",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+  },
+  "h100Qualified": false,
+  "tdxQualified": false,
+  "source": {
+    "stockBase": "9800bf1f200a0b41545926d56908d524b17c2cb2",
+    "sourceCommitAtStart": "b10d4de04710f358f20cc2a553498a307a1f7357",
+    "activatedConfigurationCommit": "f9a6c4e74d1a889a5d46c6276f4aa3329450ba85",
+    "implementationSHA256": "6c5b368de6aea47ce35a7b783f84fb41a6c7dae99b5de1e8d2c152be8c4a2a13",
+    "implementationUnchangedDuringRun": true,
+    "normalGitOpsHandoffs": [
+      "02: bootstrap public configuration",
+      "09: measured workload/Trustee/S3 public configuration"
+    ],
+    "finalAmendment": "Historical source identifiers and implementation digest describe the tested snapshot; subsequent repository housekeeping is not a new installation run."
+  },
+  "baseline": {
+    "at": "2026-10-20T19:28:29.451170+00:00",
+    "scope": "Full pattern/operator reset on existing OpenShift; not an OpenShift rebuild",
+    "passed": true,
+    "checks": {
+      "subscriptions.operators.coreos.com": [],
+      "persistentvolumeclaims": [],
+      "persistentvolumes": [],
+      "kubeletconfigs.machineconfiguration.openshift.io": [],
+      "nonPlatformCSVs": [],
+      "extensionCRDs": [],
+      "legacyProvisionerCRDs": [],
+      "confidentialRuntimeClasses": [],
+      "patternMachineConfigs": [],
+      "extensionNamespaces": [],
+      "validatingwebhookconfigurations": [],
+      "mutatingwebhookconfigurations": [],
+      "extensionAPIServices": [],
+      "extensionConsolePlugins": [],
+      "enabledExtensionConsolePlugins": [],
+      "rhoaiInjectedConfigMaps": [],
+      "patternStorageClasses": [],
+      "extensionPermissions": [],
+      "staleHardwareDiscoveryLabels": [],
+      "activeGPUAllocations": [],
+      "unreadyNodes": [],
+      "unsettledMachineConfigPools": [],
+      "unhealthyClusterOperators": []
+    },
+    "nodes": [
+      {
+        "name": "9c-63-c0-dd-06-52",
+        "bootID": "a7b16385-366f-423d-be71-04c62bab1165"
+      }
+    ]
+  },
+  "run": {
+    "startedAt": "2026-10-20T19:28:09.927944+00:00",
+    "implementationSHA256": "6c5b368de6aea47ce35a7b783f84fb41a6c7dae99b5de1e8d2c152be8c4a2a13",
+    "steps": {
+      "00": {
+        "startedAt": "2026-10-20T19:28:10.071073+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T19:28:30.115709+00:00"
+      },
+      "01": {
+        "startedAt": "2026-10-20T19:28:30.117442+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T19:29:36.292051+00:00"
+      },
+      "02": {
+        "startedAt": "2026-10-20T19:29:36.293339+00:00",
+        "revision": "b10d4de04710f358f20cc2a553498a307a1f7357",
+        "result": "PASS",
+        "completedAt": "2026-10-20T19:29:38.961024+00:00"
+      },
+      "03": {
+        "startedAt": "2026-10-20T19:29:38.961388+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:20:23.573366+00:00"
+      },
+      "04": {
+        "startedAt": "2026-10-20T21:20:23.577165+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:20:49.137926+00:00"
+      },
+      "05": {
+        "startedAt": "2026-10-20T21:20:49.138617+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:21:05.676783+00:00"
+      },
+      "06": {
+        "startedAt": "2026-10-20T21:21:05.679622+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:21:13.706173+00:00"
+      },
+      "07": {
+        "startedAt": "2026-10-20T21:21:13.709187+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:21:22.354583+00:00"
+      },
+      "08": {
+        "startedAt": "2026-10-20T21:21:22.355518+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:22:29.244499+00:00"
+      },
+      "09": {
+        "startedAt": "2026-10-20T21:22:29.250961+00:00",
+        "revision": "f9a6c4e74d1a889a5d46c6276f4aa3329450ba85",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:22:42.218266+00:00"
+      },
+      "10": {
+        "startedAt": "2026-10-20T21:22:42.219269+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:39:54.594308+00:00"
+      },
+      "11": {
+        "startedAt": "2026-10-20T21:39:54.595049+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:39:59.095085+00:00"
+      },
+      "12": {
+        "startedAt": "2026-10-20T21:39:59.096377+00:00",
+        "result": "PASS",
+        "completedAt": "2026-10-20T21:39:59.097347+00:00"
+      }
+    },
+    "approvals": [
+      {
+        "at": "2026-10-20T19:39:59.884376+00:00",
+        "namespace": "openshift-sandboxed-containers-operator",
+        "plan": "install-gjrrj",
+        "csvs": [
+          "sandboxed-containers-operator.v1.13.1"
+        ]
+      },
+      {
+        "at": "2026-10-20T19:40:01.994284+00:00",
+        "namespace": "trustee-operator-system",
+        "plan": "install-6xd5q",
+        "csvs": [
+          "trustee-operator.v1.2.1"
+        ]
+      },
+      {
+        "at": "2026-10-20T19:48:39.949315+00:00",
+        "namespace": "nvidia-gpu-operator",
+        "plan": "install-2kl2t",
+        "csvs": [
+          "gpu-operator-certified.v26.3.0"
+        ]
+      },
+      {
+        "at": "2026-10-20T21:13:20.154569+00:00",
+        "namespace": "openshift-storage",
+        "plan": "install-shvn8",
+        "csvs": [
+          "odf-operator.v4.22.6-rhodf"
+        ]
+      }
+    ],
+    "browser": {
+      "result": "PRESENTER_CONFIRMED",
+      "observedAt": "2026-10-20T21:43:32.788472+00:00",
+      "reply": "READY."
+    },
+    "sourceCommitAtStart": "b10d4de04710f358f20cc2a553498a307a1f7357",
+    "guest": {
+      "podUID": "3a3e0566-8c12-4a1a-bf9c-89f51d768ac7",
+      "evidence": [
+        {
+          "initdata": "04559aa6ac22c9aa067a73ea85c0d73b21da705eccf440d3fee1e609ff1091b9",
+          "appraisal": {
+            "cpu0": "Affirming",
+            "gpu0": "Affirming"
+          },
+          "releasedResources": [
+            "luks-passphrase",
+            "model-key",
+            "registry"
+          ]
+        },
+        {
+          "initdata": "04559aa6ac22c9aa067a73ea85c0d73b21da705eccf440d3fee1e609ff1091b9",
+          "appraisal": {
+            "cpu0": "Affirming",
+            "gpu0": "Affirming"
+          },
+          "releasedResources": [
+            "tls-cert",
+            "tls-key"
+          ]
+        }
+      ]
+    },
+    "url": "https://qwen.10.14.202.14.sslip.io"
+  },
+  "installationCodeFixes": [],
+  "adHocInstallationClusterPatches": [],
+  "manualBoundaries": [
+    "Administrator supplied reviewed platform references, registry authentication, dedicated storage inputs and private CoCo configuration.",
+    "Explicit runner flags authorized the four exact initial OLM plan approvals and two amend/push GitOps handoffs.",
+    "Workstation VPN access was restored during stage 03; the unchanged runner continued using its built-in retries.",
+    "User personally handled the new private-CA warning in the dedicated Chrome profile."
+  ],
+  "timingNote": "The approximately 132-minute installation execution includes a workstation network outage, normal host rollout and GitOps polling. It is not an installation-performance benchmark.",
+  "reset": {
+    "completedBeforeInstallation": true,
+    "hostAudit": "No old Kata VM/runtime or LVM metadata on the dedicated device. Existing OpenShift, core networking and prerequisite IOMMU settings retained. Image caches were not claimed empty.",
+    "specificCleanup": "Active old root reconciliation was stopped; retained ODF, Vault and registry data were removed. An orphan unmounted Vault LV/pool and finalizers whose controllers had already gone required audited pre-installation cleanup. These are reset repairs, not installation steps."
+  },
+  "odf": {
+    "csv": "odf-operator.v4.22.6-rhodf",
+    "channel": "stable-4.22",
+    "mode": "standalone Multicloud Object Gateway; no Ceph cluster",
+    "supportedProductionTopology": false,
+    "topologyNote": "Single-node development test; the ODF 4.22 standalone guide requires at least three worker/infrastructure nodes.",
+    "storageClass": "lvms-vg1",
+    "modelBackingStoreGiB": 100,
+    "backingAgentLimits": {
+      "cpu": "2",
+      "memory": "2Gi"
+    },
+    "bucketPolicy": "Separate publisher read/write and inference read identities; neither has object deletion or policy administration.",
+    "endpoint": "https://s3.openshift-storage.svc",
+    "serviceCATrustVerified": true
+  },
+  "publication": {
+    "uri": "s3://rhoai-models-517baaba-87a9-454a-91a1-b0e2421f6de2/qwen3-0.6b/1c615e92226c4744b20f39fab8a8b764/qwen.tar",
+    "sha256": "88e48db9d3981e1e83202d3899ebb92cf530138a0165cb8a8b8f3a2f4e64c154",
+    "bytes": 2025615360,
+    "verified": true
+  },
+  "freshVolume": {
+    "pod": {
+      "name": "qwen-kserve-5cc7b88859-48w25",
+      "uid": "3a3e0566-8c12-4a1a-bf9c-89f51d768ac7",
+      "runtimeClass": "kata-cc-nvidia-gpu",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "main",
+          "image": "registry.redhat.io/rhaii-fast/vllm-cuda-rhel9@sha256:97c7d6f66f3f0897b3ff10ddd135de930d45bdd116cf41a43e3ad7270029116a"
+        },
+        {
+          "name": "chat",
+          "image": "registry.access.redhat.com/ubi9/python-312@sha256:56fad467cb1e41666f0028b7fd71107df0556bcc9ecfc577597858c85618f55c"
+        }
+      ],
+      "initContainers": [
+        {
+          "name": "format-disk",
+          "image": "registry.redhat.io/openshift-sandboxed-containers/osc-storage-helper@sha256:c65fb8f12888705d4989d6b8f0e4e3f144224b43f72b609d5f496e77b3b73917",
+          "restartPolicy": "Always"
+        },
+        {
+          "name": "check-ready",
+          "image": "registry.redhat.io/openshift-sandboxed-containers/osc-storage-helper@sha256:c65fb8f12888705d4989d6b8f0e4e3f144224b43f72b609d5f496e77b3b73917",
+          "restartPolicy": null
+        },
+        {
+          "name": "storage-initializer",
+          "image": "image-registry.openshift-image-registry.svc:5000/rhoai-confidential-qwen/storage-initializer-streaming@sha256:88f480ccfdc2431df183aa2c577d35858657beac3a9f0afd8f4cbab36fcfc3af",
+          "restartPolicy": null
+        }
+      ],
+      "ready": true
+    },
+    "pvc": {
+      "name": "qwen-model-s3-exclusive",
+      "uid": "66bfbfd5-9bf2-4480-a4fd-020835a96cd3",
+      "volume": "pvc-66bfbfd5-9bf2-4480-a4fd-020835a96cd3",
+      "mode": "Block",
+      "accessModes": [
+        "ReadWriteOncePod"
+      ],
+      "phase": "Bound"
+    },
+    "modelResult": "Fresh S3 download; all eight pinned files decrypted and hash verified.",
+    "attestation": [
+      {
+        "initdata": "04559aa6ac22c9aa067a73ea85c0d73b21da705eccf440d3fee1e609ff1091b9",
+        "appraisal": {
+          "cpu0": "Affirming",
+          "gpu0": "Affirming"
+        },
+        "releasedResources": [
+          "luks-passphrase",
+          "model-key",
+          "registry"
+        ]
+      },
+      {
+        "initdata": "04559aa6ac22c9aa067a73ea85c0d73b21da705eccf440d3fee1e609ff1091b9",
+        "appraisal": {
+          "cpu0": "Affirming",
+          "gpu0": "Affirming"
+        },
+        "releasedResources": [
+          "tls-cert",
+          "tls-key"
+        ]
+      }
+    ]
+  },
+  "browser": {
+    "result": "PASS",
+    "url": "https://qwen.10.14.202.14.sslip.io",
+    "certificateHandling": "User personally accepted the fresh private-CA warning in this Chrome window; browser displays Not Secure for the exception.",
+    "verification": {
+      "observedAt": "2026-10-20T21:46:46.671659+00:00",
+      "prompt": "Reply with exactly the word READY.",
+      "reply": "READY.",
+      "tokens": 3,
+      "method": "Chrome pixels and accessibility state verified"
+    },
+    "followup": {
+      "prompt": "Explain confidential computing in one short sentence.",
+      "observedReply": "Confidential computing is a method that safeguards data across across systems.",
+      "tokens": 14
+    }
+  },
+  "tls": {
+    "routeTermination": "passthrough",
+    "termination": "Custom Python HTTPS server on UBI in chat container, inside the same confidential VM as vLLM",
+    "chatPort": 8443,
+    "vllmAddress": "127.0.0.1:8000",
+    "strictCAAndHostnameVerification": "PASS",
+    "certificatePEMSHA256": "6cf7744c799c83b486ea190d7b29111fa65353e7ba40edba2de1fae56a9a7a27",
+    "apiObservedReply": "Dear [Name],    Best regards,    [Your Name]",
+    "note": "The API reply and browser READY reply are distinct requests. The Chrome exception is not a claim of system CA trust."
+  },
+  "gitops": {
+    "observedAt": "2026-10-20T21:51:18.552695+00:00",
+    "applicationCount": 17,
+    "allSynced": true,
+    "allHealthy": true
+  },
+  "operatorVersions": [
+    "advanced-cluster-management.v2.17.3",
+    "cephcsi-operator.v4.22.6-rhodf",
+    "cert-manager-operator.v1.20.1",
+    "gpu-operator-certified.v26.3.0",
+    "kubevirt-hyperconverged-operator.v4.22.12",
+    "lvms-operator.v4.22.0",
+    "mcg-operator.v4.22.6-rhodf",
+    "multicluster-engine.v2.17.3",
+    "nfd.4.22.0-202610140833",
+    "ocs-client-operator.v4.22.6-rhodf",
+    "ocs-operator.v4.22.6-rhodf",
+    "ocs-tls-profiles.v4.22.6-rhodf",
+    "odf-csi-addons-operator.v4.22.6-rhodf",
+    "odf-dependencies.v4.22.6-rhodf",
+    "odf-external-snapshotter-operator.v4.22.6-rhodf",
+    "odf-operator.v4.22.6-rhodf",
+    "odf-prometheus-operator.v4.22.6-rhodf",
+    "openshift-external-secrets-operator.v1.2.1",
+    "openshift-gitops-operator.v1.22.2",
+    "packageserver",
+    "patterns-operator.v0.0.81",
+    "recipe.v4.22.6-rhodf",
+    "rhods-operator.3.6.0-ea.2",
+    "rook-ceph-operator.v4.22.6-rhodf",
+    "sandboxed-containers-operator.v1.13.1",
+    "trustee-operator.v1.2.1"
+  ],
+  "validation": {
+    "pythonTests": 50,
+    "regoChecks": 22,
+    "helmChartsLintedAndRendered": 4,
+    "stockValuesSchema": "PASS",
+    "stockPreviewAll": "Unavailable: upstream target is missing; chart-specific lint/render checks used.",
+    "timing": "Implementation checks completed before the successful frozen-source run; this historical test record is retained through subsequent repository housekeeping."
+  },
+  "priorQualification": {
+    "date": "2026-10-20",
+    "sourceCommit": "1fecdca9b1ecaf01c7750c40a898a57b299d1f94",
+    "scope": "Earlier S3 integration/security checks; not part of the new clean-baseline installation.",
+    "persistence": {
+      "result": "FULL_VM_REPLACEMENT_AND_ENCRYPTED_PERSISTENCE_PASS",
+      "pod": "qwen-kserve-db45c788f-slpmj",
+      "podUID": "2182e2b3-4818-4c1d-a607-d8b2e34ec50d",
+      "firstGuestBootID": "9505606a-b6fd-4562-8130-8eea1d8438cc",
+      "currentGuestBootID": "d4ae0072-f7ec-4971-83b8-54a3af03e5a5",
+      "pvc": "qwen-model-s3-exclusive",
+      "pvcUID": "dd901478-3373-4c61-8a93-91e8d8a1a081",
+      "pv": "pvc-dd901478-3373-4c61-8a93-91e8d8a1a081",
+      "volumeMode": "Block",
+      "accessModes": [
+        "ReadWriteOncePod"
+      ],
+      "luksKeyVerified": true,
+      "persistedModelHashesVerified": true,
+      "downloadAndDecryptionSkipped": true,
+      "httpsChat": "PASS with strict CA/hostname verification"
+    },
+    "negativeS3Checks": {
+      "results": [
+        "S3_READER_PROBE_LIST_HEAD_PASS",
+        "S3_READER_WRITE_DELETE_DENIED",
+        "S3_PUBLISHER_DELETE_DENIED",
+        "S3_PRODUCT_INVALID_CREDENTIALS_REJECTED",
+        "S3_PRODUCT_UNTRUSTED_CA_REJECTED",
+        "S3_PUBLISHED_JWE_TAMPER_REJECTED"
+      ],
+      "executionBoundary": "Trusted publisher namespace with stock RHOAI initializer image; authentication-tag test uses a small file from the actual published JWE archive."
+    },
+    "unapprovedGuest": {
+      "result": "UNAPPROVED_GUEST_KEY_RELEASE_DENIED",
+      "podUID": "9e0c81a9-4b1b-4dcc-8efa-10f1dcb0f5a7",
+      "identity": {
+        "approved": "4e989ce10cf290c491b655227059795bdfcf1380548a5833a8ff8a23a2f5713e",
+        "unapproved": "e59d3147d189a302bd1f567b19dcef4f844fe58cf35176f3f6cd71f8f18e91bf"
+      },
+      "cpu": "Warning",
+      "gpu": "Affirming",
+      "trustee": "PolicyDeny",
+      "httpStatus": 401
+    },
+    "streaming": {
+      "event": "STREAMING_2GIB_PASS",
+      "peakRssKiB": 78732,
+      "tamperRejectedWithOriginalFilesPreserved": true,
+      "memoryLimitMiB": 512
+    },
+    "administratorExec": "DENIED"
+  },
+  "remainingQualification": [
+    "Intel TDX with NVIDIA H100 hardware.",
+    "AMD SEV-SNP with NVIDIA H100 hardware.",
+    "Supported multi-node ODF topology and production sizing."
+  ]
+}

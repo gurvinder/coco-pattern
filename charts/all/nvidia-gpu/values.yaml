@@ -9,3 +9,10 @@ kataSandboxDevicePlugin:
 
 iommu:
   enabled: true
+
+runtimeTimeouts:
+  enabled: false
+  seconds: 600
+  pools:
+    - {name: master, role: master}
+    - {name: worker, role: worker}

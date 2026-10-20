@@ -1,0 +1,98 @@
+# Generic RHOAI extension; hardware comes from the selected CoCo profile.
+kbs:
+  # Bound the demo server's concurrency independently of the host CPU count.
+  # The stock chart passes this supported setting to Trustee's HTTP server.
+  workerCount: 4
+runtimeTimeouts:
+  enabled: true
+clusterGroup:
+  subscriptions:
+    gpu-operator:
+      name: gpu-operator-certified
+      namespace: nvidia-gpu-operator
+      source: certified-operators
+      channel: v26.3
+      installPlanApproval: Manual
+      csv: gpu-operator-certified.v26.3.0
+      annotations:
+        argocd.argoproj.io/sync-wave: '25'
+  applications:
+    trustee:
+      chart: null
+      chartVersion: null
+      path: charts/hub/rhoai-trustee
+      extraValueFiles:
+      - /overrides/values-trustee.yaml
+      - '/overrides/values-rhoai-qwen-{{ if (index $.Values.clusterGroup.applications "rhoai-confidential-qwen").disabled }}bootstrap{{ else }}trustee{{ end }}.yaml'
+      - /{{ $.Values.global.rhoai.site }}/values-trustee.yaml
+    internal-registry:
+      name: internal-registry
+      namespace: openshift-image-registry
+      project: hub
+      path: charts/hub/internal-registry
+      annotations:
+        argocd.argoproj.io/sync-wave: '20'
+    nvidia-gpu:
+      name: nvidia-gpu
+      namespace: nvidia-gpu-operator
+      project: hub
+      path: charts/all/nvidia-gpu
+      # Restore Argo tracking metadata if initial node-controller processing
+      # removes it, without waiting for another Git revision.
+      syncPolicy:
+        automated:
+          selfHeal: true
+        retry:
+          limit: 20
+      annotations:
+        argocd.argoproj.io/sync-wave: '25'
+    rhoai-platform:
+      name: rhoai-platform
+      namespace: redhat-ods-operator
+      project: hub
+      path: charts/hub/rhoai-platform
+      annotations:
+        argocd.argoproj.io/sync-wave: '30'
+      extraValueFiles:
+      - /overrides/values-rhoai-platform.yaml
+      disabled: false
+    rhoai-model-publisher:
+      name: rhoai-model-publisher
+      namespace: rhoai-model-publisher
+      project: hub
+      path: charts/hub/rhoai-model-publisher
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 20
+      annotations:
+        argocd.argoproj.io/sync-wave: '32'
+      extraValueFiles:
+      - /overrides/values-rhoai-publisher.yaml
+      - /{{ $.Values.global.rhoai.site }}/values-distribution.yaml
+      disabled: true
+    rhoai-confidential-qwen:
+      name: rhoai-confidential-qwen
+      namespace: rhoai-confidential-qwen
+      project: hub
+      path: charts/coco-supported/rhoai-confidential-qwen
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 20
+      annotations:
+        argocd.argoproj.io/sync-wave: '40'
+      extraValueFiles:
+      - /{{ $.Values.global.rhoai.site }}/values-distribution.yaml
+      - /{{ $.Values.global.rhoai.site }}/values-qwen.yaml
+      disabled: true
+    hello-openshift:
+      disabled: true
+    kbs-access-curl:
+      disabled: true
+    kbs-access-sealed:
+      disabled: true

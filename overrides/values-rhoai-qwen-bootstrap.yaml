@@ -1,0 +1,5 @@
+# The application keys are enrolled only after the platform is installed.
+# Bootstrap must not wait for a Vault path which does not exist yet.
+kbs:
+  resourcePolicy:
+    confidentialGuestBindings: {}

@@ -1,0 +1,25 @@
+clusterGroup:
+  applications:
+    baremetal:
+      overrides:
+      - name: tdx.enabled
+        value: 'false'
+    trustee:
+      overrides:
+      - name: global.coco.secured
+        value: 'true'
+      - name: kbs.snp.enabled
+        value: 'true'
+      - name: kbs.tdx.enabled
+        value: 'false'
+      - name: kbs.gpu.enabled
+        value: 'true'
+      - name: kbs.baremetal.enabled
+        value: 'true'
+      - name: kbs.registryCa.enabled
+        value: '{{ $.Values.global.airgap }}'
+      - name: kbs.tdx.collateralService
+        value: '{{ ternary "file:///opt/confidential-containers/attestation-service/tdx/platform_collaterals.json" "https://api.trustedservices.intel.com/sgx/certification/v4/" $.Values.global.airgap }}'
+  subscriptions:
+    intel-tdx-dcap:
+      disabled: true
