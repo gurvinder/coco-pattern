@@ -45,6 +45,11 @@ spec:
     initContainers:
       - name: format-disk
         image: {{ .Values.images.storageHelper | quote }}
+        # Always pull so kubelet invokes CRI PullImage and CRI-O routes it
+        # through the kata guest-pull ImageServer; IfNotPresent + a host-cached
+        # image makes CreateContainer fail with "image not found:
+        # docker.io/library/<config-digest>:latest".
+        imagePullPolicy: Always
         restartPolicy: Always
         workingDir: /
         command: {{ include "qwen.command" (dict "root" . "role" "format-disk" "entry" "format.sh") }}
@@ -66,6 +71,7 @@ spec:
           - {name: scripts, mountPath: /opt/demo, readOnly: true}
       - name: check-ready
         image: {{ .Values.images.storageHelper | quote }}
+        imagePullPolicy: Always
         command: [/usr/local/bin/luks-helper, wait-ready]
         resources: {}
         securityContext:
@@ -76,6 +82,7 @@ spec:
           - {name: storage-ipc, mountPath: /dev/shm}
       - name: storage-initializer
         image: {{ required "Set images.initializer to the built image digest" .Values.images.initializer | quote }}
+        imagePullPolicy: Always
         workingDir: /
         command: {{ include "qwen.command" (dict "root" . "role" "storage-initializer" "entry" "initialize.sh") }}
         env:
@@ -117,6 +124,7 @@ spec:
     containers:
       - name: main
         image: {{ .Values.images.vllm | quote }}
+        imagePullPolicy: Always
         workingDir: /
         command: {{ include "qwen.command" (dict "root" . "role" "main" "entry" "vllm.sh") }}
         env:
@@ -156,6 +164,7 @@ spec:
           failureThreshold: 180
       - name: chat
         image: {{ .Values.images.chat | quote }}
+        imagePullPolicy: Always
         workingDir: /
         command: {{ include "qwen.command" (dict "root" . "role" "chat" "entry" "chat.sh") }}
         env:
